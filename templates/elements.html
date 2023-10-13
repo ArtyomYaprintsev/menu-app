@@ -1,0 +1,15 @@
+<ul>
+  {% load menu %}
+  
+  {% for element, childs in elements.items %}
+  <li>
+    <div classname="element">
+      {% draw_element element element_names|get_item:element %}
+    </div>
+
+    {% if childs is not None %}
+      {% draw_element_list childs %}
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
