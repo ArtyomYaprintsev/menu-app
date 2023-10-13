@@ -11,11 +11,16 @@ register = Library()
 
 @register.filter
 def get_item(dictionary, key):
+    """Tag allows to get value from the given dictionary."""
     return dictionary.get(key)
 
 
 @register.inclusion_tag("element.html", takes_context=True)
 def draw_element(context, element: int, name: str):
+    """Renders element.
+    
+    Element represents as link. Tag provides element link and is_active state.
+    """
     query_current = context.get("query")
     menu = context.get("menu")
 
@@ -34,6 +39,7 @@ def draw_element(context, element: int, name: str):
 
 @register.inclusion_tag("elements.html", takes_context=True)
 def draw_element_list(context, elements,):
+    """Renders element list."""
     return {
         "elements": elements,
         **{
@@ -50,16 +56,20 @@ def draw_element_list(context, elements,):
 )
 @provide_optimizer
 def draw_menu(context, menu: str, **kwargs):
+    """Renders the menu by the given menu name."""
     optimizer: Optimizer = kwargs.get("optimizer")
 
     active_element = context["request"].GET.get(menu)
 
+    # Checks that the given active element specified by id
     if not active_element.isdigit():
         raise ValueError(
             _("Menu parameter must be a number, check query parameters."),
         )
 
     active_menu = optimizer.get_menu(int(active_element))
+
+    # Fetches the element names for the created menu
     element_names = {
         element.id: element.name
         for element in Element.objects.filter(

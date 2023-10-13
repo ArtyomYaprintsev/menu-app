@@ -6,6 +6,16 @@ from menu.models import Menu, Element
 
 
 class MenuWithRoot(NamedTuple):
+    """Keeps information about the `Menu` instance as tuple.
+    
+    Attributes:
+        id(`int`): the `Menu` instance id
+        name(`str`): the `Menu` instance name
+        root_id(`int`): the `Menu` instance related root element id
+        root(`str`): the `Menu` instance related root element name
+
+    """
+
     id: int
     name: str
     root_id: int
@@ -20,6 +30,7 @@ def show_menus(request):
         )
     ]
 
+    # Handles request query parameters
     if not all(menu.name in request.GET for menu in menus):
         query_params = "&".join(
             f'{menu.name}={request.GET.get(menu.name, menu.root_id)}'
